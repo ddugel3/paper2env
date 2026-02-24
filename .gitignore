@@ -14,3 +14,5 @@ papers/
 .env
 .env.*
 logs/
+
+README_PRESENTATION.md
