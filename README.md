@@ -69,6 +69,7 @@ paper2env help
 - GitHub/HF 힌트가 있으면 레포 파일을 우선 사용해 의존성을 추출합니다.
 - Dockerfile은 논문/레포 힌트 기반으로 base image를 결정하고 필요한 시스템 패키지를 추가합니다.
 - Self‑healing은 에러 로그를 규칙 기반으로 분류해 최소 수정으로 재시도합니다.
+- 레포에 `Makefile`/`CMakeLists.txt`가 있으면 빌드 도구(`cmake`, `ninja-build`, `pkg-config`)를 자동 추가합니다.
 
 자세한 규칙은 `docs/rules.md` 참고.
 
@@ -87,6 +88,7 @@ paper2env help
 - 기본적으로 항상 새로 생성합니다. 기존 `workspace/`를 재사용하려면 `--resume`.
 - 자동 진행은 `--yes` 또는 `--no-interactive`로 설정합니다.
 - `--best-effort`는 알 수 없는 에러에서 실패를 중단하지 않고 `failure_report.json`만 기록한 뒤 종료 코드를 0으로 반환합니다.
+- C/C++ 빌드가 필요한 프로젝트는 `Makefile`/`CMakeLists.txt` 감지로 기본 툴체인이 자동 추가됩니다.
 
 ## Ollama 사용 순서
 
