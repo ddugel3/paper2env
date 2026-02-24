@@ -14,6 +14,24 @@ pipx install paper2env
 pip install paper2env
 ```
 
+## 사전 조건
+
+- Docker 설치 및 실행(daemon 필요)
+- Python 3.8+ 설치
+- 인터넷 연결(의존성 다운로드/레포 클론에 필요)
+- 디스크 여유 공간(Docker 이미지/모델로 수 GB 필요 가능)
+
+선택 사항:
+- Git 설치(GitHub 레포 힌트 사용 시)
+- Ollama 설치(LLM 보강 옵션 사용 시)
+- GPU/CUDA(해당 논문이 GPU를 요구하는 경우)
+
+실패 가능 요인:
+- 외부 레포/패키지 삭제 또는 구조 변경
+- 아키텍처/플랫폼 미지원 패키지(예: arm64)
+- CUDA/드라이버 버전 불일치
+- 논문 내 환경 정보 부족 및 레포 부재
+
 ## 빠른 시작
 
 ```bash
