@@ -404,7 +404,14 @@ def apply_patch(cfg: RunConfig, error_type: str) -> List[str]:
 
 
 def apply_llm_patch(cfg: RunConfig, model: str) -> List[str]:
-    prompt = build_patch_prompt(_LAST_LOGS)
+    prompt = build_patch_prompt(
+        _LAST_LOGS,
+        run_cmd=cfg.run_cmd,
+        base_image=cfg.base_image,
+        python_version=cfg.python_version,
+        requirements_text=cfg.requirements_text,
+        dockerfile_text=cfg.dockerfile_text,
+    )
     data = call_ollama(model, prompt)
     if not data or "actions" not in data:
         return []
