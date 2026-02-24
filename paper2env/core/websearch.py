@@ -186,13 +186,15 @@ def _raw_github_url(owner: str, repo: str, branch: str, path: str) -> str:
     return f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}"
 
 
-def scan_github_repo(repo_url: str) -> Dict[str, Optional[str]]:
+def scan_github_repo(repo_url: str) -> Dict[str, Optional[str] | bool]:
     parsed = _parse_github_owner_repo(repo_url)
     if not parsed:
         return {
             "dockerfile": None,
             "requirements": None,
             "environment_yml": None,
+            "has_makefile": False,
+            "has_cmake": False,
         }
     owner, repo = parsed
     meta = _get_github_repo_meta(owner, repo)
@@ -205,9 +207,12 @@ def scan_github_repo(repo_url: str) -> Dict[str, Optional[str]]:
     readme_path = None
     setup_py_path = None
     setup_cfg_path = None
+    has_makefile = False
+    has_cmake = False
     if tree:
         for item in tree:
             path = item.get("path") or ""
+            name = path.split("/")[-1]
             if not docker_path and path.endswith("Dockerfile"):
                 docker_path = path
             if not req_path and path.endswith("requirements.txt"):
@@ -220,6 +225,10 @@ def scan_github_repo(repo_url: str) -> Dict[str, Optional[str]]:
                 setup_py_path = path
             if not setup_cfg_path and path.endswith("setup.cfg"):
                 setup_cfg_path = path
+            if name == "Makefile":
+                has_makefile = True
+            if name == "CMakeLists.txt":
+                has_cmake = True
             if docker_path and req_path and env_path:
                 break
 
@@ -257,6 +266,8 @@ def scan_github_repo(repo_url: str) -> Dict[str, Optional[str]]:
         "readme": readme or None,
         "setup_py": setup_py or None,
         "setup_cfg": setup_cfg or None,
+        "has_makefile": has_makefile,
+        "has_cmake": has_cmake,
     }
 
 

@@ -300,6 +300,8 @@ def cmd_run(args: argparse.Namespace) -> int:
     repo_requirements = None
     repo_env_yml = None
     repo_req_source = None
+    repo_has_makefile = False
+    repo_has_cmake = False
     if github_urls:
         repo_data = scan_github_repo(github_urls[0])
         repo_dockerfile = repo_data.get("dockerfile")
@@ -308,6 +310,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         repo_readme = repo_data.get("readme")
         repo_setup_py = repo_data.get("setup_py")
         repo_setup_cfg = repo_data.get("setup_cfg")
+        repo_has_makefile = bool(repo_data.get("has_makefile"))
+        repo_has_cmake = bool(repo_data.get("has_cmake"))
         if repo_dockerfile:
             m = re.search(r"^FROM\s+([A-Za-z0-9./:_-]+)", repo_dockerfile, re.M)
             if m:
@@ -450,6 +454,10 @@ def cmd_run(args: argparse.Namespace) -> int:
     if (repo_requirements or hf_requirements) and "git+" in (repo_requirements or hf_requirements):
         if "git" not in system_packages:
             system_packages.append("git")
+    if github_urls and (repo_has_makefile or repo_has_cmake):
+        for pkg in ["cmake", "ninja-build", "pkg-config"]:
+            if pkg not in system_packages:
+                system_packages.append(pkg)
 
     cfg = RunConfig(
         paper_id=paper_id,
@@ -559,6 +567,8 @@ def cmd_export(args: argparse.Namespace) -> int:
     repo_requirements = None
     repo_env_yml = None
     repo_req_source = None
+    repo_has_makefile = False
+    repo_has_cmake = False
     if github_urls:
         repo_data = scan_github_repo(github_urls[0])
         repo_dockerfile = repo_data.get("dockerfile")
@@ -567,6 +577,8 @@ def cmd_export(args: argparse.Namespace) -> int:
         repo_readme = repo_data.get("readme")
         repo_setup_py = repo_data.get("setup_py")
         repo_setup_cfg = repo_data.get("setup_cfg")
+        repo_has_makefile = bool(repo_data.get("has_makefile"))
+        repo_has_cmake = bool(repo_data.get("has_cmake"))
         if repo_dockerfile:
             m = re.search(r"^FROM\s+([A-Za-z0-9./:_-]+)", repo_dockerfile, re.M)
             if m:
@@ -645,6 +657,10 @@ def cmd_export(args: argparse.Namespace) -> int:
     if (repo_requirements or hf_requirements) and "git+" in (repo_requirements or hf_requirements):
         if "git" not in system_packages:
             system_packages.append("git")
+    if github_urls and (repo_has_makefile or repo_has_cmake):
+        for pkg in ["cmake", "ninja-build", "pkg-config"]:
+            if pkg not in system_packages:
+                system_packages.append(pkg)
 
     cfg = RunConfig(
         paper_id=paper_id,
